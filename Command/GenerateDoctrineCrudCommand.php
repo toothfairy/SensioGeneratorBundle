@@ -92,7 +92,7 @@ EOT
         $bundle      = $this->getContainer()->get('kernel')->getBundle($bundle);
 
         $generator = $this->getGenerator();
-        $generator->generate($bundle, $entity, $metadata[0], $format, $prefix, $withWrite);
+        $generator->generate($bundle, $entity, $metadata[0], $format, $prefix, $withWrite, $secure);
 
         $output->writeln('Generating the CRUD code: <info>OK</info>');
 

@@ -31,6 +31,7 @@ class DoctrineCrudGenerator extends Generator
     private $metadata;
     private $format;
     private $actions;
+    private $secure;
 
     /**
      * Constructor.
@@ -53,14 +54,16 @@ class DoctrineCrudGenerator extends Generator
      * @param string            $format           The configuration format (xml, yaml, annotation)
      * @param string            $routePrefix      The route name prefix
      * @param array             $needWriteActions Wether or not to generate write actions
+     * @param string            $secure           Add ACL protection into crud actions
      *
      * @throws \RuntimeException
      */
-    public function generate(BundleInterface $bundle, $entity, ClassMetadataInfo $metadata, $format, $routePrefix, $needWriteActions)
+    public function generate(BundleInterface $bundle, $entity, ClassMetadataInfo $metadata, $format, $routePrefix, $needWriteActions, $secure)
     {
         $this->routePrefix = $routePrefix;
         $this->routeNamePrefix = str_replace('/', '_', $routePrefix);
         $this->actions = $needWriteActions ? array('index', 'show', 'new', 'edit', 'delete') : array('index', 'show');
+        $this->secure = $secure;
 
         if (count($metadata->identifier) > 1) {
             throw new \RuntimeException('The CRUD generator does not support entity classes with multiple primary keys.');
@@ -181,6 +184,7 @@ class DoctrineCrudGenerator extends Generator
             'namespace'         => $this->bundle->getNamespace(),
             'entity_namespace'  => $entityNamespace,
             'format'            => $this->format,
+            'secure'            => $this->secure,
         ));
     }
 
