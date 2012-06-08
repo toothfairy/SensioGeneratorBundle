@@ -42,6 +42,7 @@ class GenerateDoctrineCrudCommand extends GenerateDoctrineCommand
                 new InputOption('route-prefix', '', InputOption::VALUE_REQUIRED, 'The route prefix'),
                 new InputOption('with-write', '', InputOption::VALUE_NONE, 'Whether or not to generate create, new and delete actions'),
                 new InputOption('format', '', InputOption::VALUE_REQUIRED, 'Use the format for configuration files (php, xml, yml, or annotation)', 'annotation'),
+                new InputOption('secure', '', InputOption::VALUE_NONE, 'Add secure piece into edit, create and delete actions'),
             ))
             ->setDescription('Generates a CRUD based on a Doctrine entity')
             ->setHelp(<<<EOT
@@ -82,6 +83,7 @@ EOT
         $format = Validators::validateFormat($input->getOption('format'));
         $prefix = $this->getRoutePrefix($input, $entity);
         $withWrite = $input->getOption('with-write');
+        $secure = $input->getOption('secure');
 
         $dialog->writeSection($output, 'CRUD generation');
 
@@ -147,6 +149,17 @@ EOT
         ));
         $withWrite = $dialog->askConfirmation($output, $dialog->getQuestion('Do you want to generate the "write" actions', $withWrite ? 'yes' : 'no', '?'), $withWrite);
         $input->setOption('with-write', $withWrite);
+
+        // secure?
+        $secure = $input->getOption('secure') ?: false;
+        $output->writeln(array(
+            '',
+            'By default create update and delete actions are not secured',
+            'Secure option adds ACL protection',
+            '',
+        ));
+        $secure = $dialog->askConfirmation($output, $dialog->getQuestion('Do you want to add ACL protection into create, edit, update and delete actions', $secure ? 'yes' : 'no', '?'), $secure);
+        $input->setOption('secure', $secure);
 
         // format
         $format = $input->getOption('format');
