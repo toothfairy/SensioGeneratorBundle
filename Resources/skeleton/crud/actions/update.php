@@ -6,6 +6,7 @@
      * @Route("/{id}/update", name="{{ route_name_prefix }}_update")
      * @Method("post")
      * @Template("{{ bundle }}:{{ entity }}:edit.html.twig")
+     * @Secure(roles="ROLE_USER")
 {% endif %}
      */
     public function updateAction($id)
@@ -16,6 +17,12 @@
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find {{ entity }} entity.');
+        }
+
+        $securityContext = $this->get('security.context');
+        if (false === $securityContext->isGranted('EDIT', $entity))
+        {
+            throw new AccessDeniedException();
         }
 
         $editForm   = $this->createForm(new {{ entity_class }}Type(), $entity);

@@ -5,6 +5,7 @@
 {% if 'annotation' == format %}
      * @Route("/new", name="{{ route_name_prefix }}_new")
      * @Template()
+     * @Secure(roles="ROLE_USER")
 {% endif %}
      */
     public function newAction()

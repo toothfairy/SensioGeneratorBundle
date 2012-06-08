@@ -5,6 +5,7 @@
 {% if 'annotation' == format %}
      * @Route("/{id}/delete", name="{{ route_name_prefix }}_delete")
      * @Method("post")
+     * @Secure(roles="ROLE_USER")
 {% endif %}
      */
     public function deleteAction($id)
@@ -20,6 +21,12 @@
 
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find {{ entity }} entity.');
+            }
+
+            $securityContext = $this->get('security.context');
+            if (false === $securityContext->isGranted('DELETE', $entity))
+            {
+                throw new AccessDeniedException();
             }
 
             $em->remove($entity);

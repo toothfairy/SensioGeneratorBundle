@@ -5,6 +5,7 @@
 {% if 'annotation' == format %}
      * @Route("/{id}/edit", name="{{ route_name_prefix }}_edit")
      * @Template()
+     * @Secure(roles="ROLE_USER")
 {% endif %}
      */
     public function editAction($id)
@@ -15,6 +16,12 @@
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find {{ entity }} entity.');
+        }
+
+        $securityContext = $this->get('security.context');
+        if (false === $securityContext->isGranted('EDIT', $entity))
+        {
+            throw new AccessDeniedException();
         }
 
         $editForm = $this->createForm(new {{ entity_class }}Type(), $entity);
