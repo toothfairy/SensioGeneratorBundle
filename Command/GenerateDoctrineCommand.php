@@ -11,7 +11,7 @@
 
 namespace Sensio\Bundle\GeneratorBundle\Command;
 
-use Doctrine\Bundle\DoctrineBundle\Mapping\MetadataFactory;
+use Symfony\Bundle\DoctrineBundle\Mapping\MetadataFactory;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 
 abstract class GenerateDoctrineCommand extends ContainerAwareCommand

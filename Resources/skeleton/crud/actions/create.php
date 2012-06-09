@@ -22,18 +22,17 @@
             $em->persist($entity);
             $em->flush();
 
-            // creating the ACL
+{% if secure -%}
             $aclProvider = $this->get('security.acl.provider');
             $objectIdentity = ObjectIdentity::fromDomainObject($entity);
             $acl = $aclProvider->createAcl($objectIdentity);
 
-            // retrieving the security identity of the currently logged-in user
             $securityIdentity = UserSecurityIdentity::fromAccount($user);
 
-            // grant owner access
             $acl->insertObjectAce($securityIdentity, MaskBuilder::MASK_OWNER);
             $aclProvider->updateAcl($acl);
 
+{%- endif %}
             {% if 'show' in actions -%}
                 return $this->redirect($this->generateUrl('{{ route_name_prefix }}_show', array('id' => $entity->getId())));
             {%- else -%}

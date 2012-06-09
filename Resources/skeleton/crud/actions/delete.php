@@ -23,11 +23,14 @@
                 throw $this->createNotFoundException('Unable to find {{ entity }} entity.');
             }
 
+{% if secure -%}
             $securityContext = $this->get('security.context');
             if (false === $securityContext->isGranted('DELETE', $entity))
             {
                 throw new AccessDeniedException();
             }
+{%- endif %}
+
 
             $em->remove($entity);
             $em->flush();

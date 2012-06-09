@@ -19,11 +19,14 @@
             throw $this->createNotFoundException('Unable to find {{ entity }} entity.');
         }
 
+{% if secure -%}
         $securityContext = $this->get('security.context');
         if (false === $securityContext->isGranted('EDIT', $entity))
         {
             throw new AccessDeniedException();
         }
+{%- endif %}
+
 
         $editForm   = $this->createForm(new {{ entity_class }}Type(), $entity);
         $deleteForm = $this->createDeleteForm($id);
